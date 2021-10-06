@@ -1,9 +1,10 @@
 from fleet import Fleet
-from heard import Heard
+from herd import Herd
 class Battlefield():
     def __init__(self):
-        pass
-
+        self.herd = Herd()
+        self.fleet = Fleet()
+        
     def run_game(self):
         pass
 
