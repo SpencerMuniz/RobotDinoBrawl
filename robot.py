@@ -5,6 +5,6 @@ class Robot:
         self.attack_points = attack_points
 
     def robot_attack(self, dinosaur):
-        dinosaur.dinosaur_attack_points -= self.robot_attack
+        dinosaur.health_points -= self.attack_points
 
     
