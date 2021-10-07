@@ -1,17 +1,15 @@
-from dinosaur import Dinosaur
+
 from fleet import Fleet
 from herd import Herd
 import random
-
-from robot import Robot
 
 class Battlefield():
     def __init__(self):
         self.herd = Herd()
         self.fleet = Fleet()
         self.turn = 1
-        self.user_turn = 0
-        self.opponent_turn = 0
+        self.user_select = 0
+        self.opponent_select = 0
         self.select_target = 0
         self.user_team = None
         self.opponent_team = None
@@ -56,18 +54,100 @@ class Battlefield():
             if self.user_team == self.herd.dinosaurs:
                 self.dino_turn()
                 if self.opponent_attacked.health_points < 1:
+                    print(f"{self.opponent_team.name} got clapped!")
+                    del self.opponent_team[self.opponent_select]
+        else:
+            if self.user_team == self.herd.dinosaurs:
+                self.robo_turn()
+                if self.user_attacked.health_points < 1:
+                    print(f"{self.user_attacked.name} just got clapped!")
+                    del self.user_team[self.user_select]
+        if len(self.user_team) > 0:
+            if len(self.opponent_team) > 0:
+                self.opponent_select = 0
+                self.turn += 1
+                self.battle()
+            else:
+                print("You have won! The future is yours! The dominate team is:")
+                self.display_winners()
 
-    def dino_turn(self, dinosaur):
-        pass
+           
 
-    def robo_turn(self, robot):
-        pass
+    def dino_turn(self):
+        if self.user_team == self.herd.dinosaurs:
+            self.user_attacker = self.user_team[self.user_select]
+            print(f"You'e pulling up with {self.user_attacker.name}")
+            print(f"\n Pick a fool to ride on!")
+            self.show_robo_opponent_options()
+            self.opponent_select = int(input("Enter opponent number to ride on!"))
+            while (self.opponent_select < 0) or (self.opponent_select > len(self.opponent_team) - 1):
+                self.opponent_select = int(input("Error! Select an opponent"))
+            self.opponent_attacked = self.opponent_team[self.opponent_select]
+            print(f"{self.user_attacker.name} pulls up on {self.opponent_attacked.name} and did {self.user_attacker.attack_points} damage!")
+            self.user_attacker.dinosaur_attack(self.opponent_attacked)
+            if self.user_select >= (len(self.user_team) - 1):
+                self.user_select = 0
+            else:
+                self.user_select += 1
+        else:
+            self.select_target = random.randint(0, len(self.user_team) - 1)
+            self.opponent_attacker = self.user_team[self.select_target]
+            print(f"{self.opponent_attacker.name} pulled up on {self.user_attacked.name} and did {self.opponent_attacker.attack_points} damage!")
+            self.opponent_attacker.dinosaur_attack(self.user_attacked)
+            if self.user_select >= (len(self.user_team) - 1):
+                self.user_select = 0
 
-    # def show_dino_opponent_options(self):
-    #     pass
 
-    # def show_robo_opponent_options(self):
-    #     pass
+    def robo_turn(self):
+        if self.user_team == self.fleet.robots:
+            self.user_attacker = self.user_team[self.user_select]
+            print(f"You're pulling up with {self.user_attacker.name}")
+            print("Pick a fool to ride on")
+            self.show_dino_opponent_options()
+            self.opponent_select = int(input("Enter opponent number to ride on!"))
+            while (self.opponent_select < 0) or (self.opponent_select > len(self.opponent_team) - 1):
+               self.opponent_select = int(input("Error! Select an opponent!"))
+            self.opponent_attacked = self.opponent_team[self.opponent_select] 
+            print(f"{self.user_attacker.name} pulled up on {self.opponent_attacked.name} and did {self.user_attacker.attack_points} damage!")
+            if self.user_select >= (len(self.user_team) - 1):
+                self.user_select = 0
+            else:
+                self.user_select += 1
+            
+        else:
+            self.select_target = random.randint(0, len(self.user_team) - 1)
+            self.opponent_attacker = self.opponent_team[self.select_target]
+            print(f"{self.user_attacker.name} pulled up on {self.opponent_attacked.name} and did {self.user_attacker.attack_points} damage!")
+            self.opponent_attacker.robot_attack(self.user_attacked)
+            if self.user_select >= (len(self.user_team) - 1):
+                self.user_select = 0
+
+    def show_dino_opponent_options(self):
+        for dinosaurs in self.opponent_team:
+            print(f"Enter {self.opponent_select} - {dinosaurs.name}")
+            self.opponent_select += 1
+
+    def show_robo_opponent_options(self):
+        for robots in self.opponent_team:
+            print(f"Enter {self.opponent_select} - {robots.name}")
+            self.opponent_select += 1
 
     def display_winners(self):
-        pass
+        if self.user_choice == "1": #1 for dinos 2 for robos\
+            if len(self.user_team) == 0:
+                print("The robots have defeated us!")
+                for robots in self.fleet.robots:
+                    print(f"The winner is {robots.name}")
+            else:
+                print("The Dinosaurs have taken over the world!")
+                for dinosaurs in self.herd.dinosaurs:
+                    print(f"The winner is {dinosaurs.name}")
+        else:
+            if len(self.user_team) == 0:
+                print("The dinosaurs have won!")
+                for dinosaurs in self.herd.dinosaurs:
+                    print(f"The winner is {dinosaurs.name}")
+            else:
+                print("The robots have won!")
+                for robots in self.fleet.robots:
+                    print(f"The winner is {robots.name}")
