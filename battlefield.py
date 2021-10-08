@@ -121,7 +121,7 @@ class Battlefield():
             while (self.opponent_select < 0) or (self.opponent_select > len(self.opponent_team) - 1):
                self.opponent_select = int(input("Error! Select an opponent!")) 
             print(f"{self.user_team[self.user_select].name} pulled up on {self.opponent_team[self.opponent_select].name} and did {self.user_team[self.user_select].attack_points} damage!")
-            self.opponent_team[self.opponent_select].robot_attack(self.user_team[self.user_select])
+            self.user_team[self.user_select].robot_attack(self.opponent_team[self.opponent_select])
             if self.user_select >= (len(self.user_team) - 1):
                 self.user_select = 0
             else:
