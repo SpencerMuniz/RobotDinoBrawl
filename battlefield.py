@@ -61,8 +61,8 @@ class Battlefield():
             else:
                 self.robo_turn()
                 if self.opponent_team[self.opponent_select].health_points < 1:
-                    print(f"{self.user_team[self.user_select].name} just got clapped!")
-                    del self.user_team[self.user_select]
+                    print(f"{self.opponent_team[self.opponent_select].name} just got clapped!")
+                    del self.opponent_team[self.opponent_select]
         else:
             if self.user_team == self.herd.dinosaurs:
                 self.robo_turn()
@@ -114,19 +114,19 @@ class Battlefield():
 
     def robo_turn(self):
         if self.user_team == self.fleet.robots:
-            print(f"You're pulling up with {self.user_team[self.user_select].name}")
-            print("Pick a fool to ride on")
+            self.user_team[self.user_select]
+            print(f"You'e pulling up with {self.user_team[self.user_select].name}")
+            print(f"\n Pick a fool to ride on!")
             self.show_dino_opponent_options()
             self.opponent_select = int(input("Enter opponent number to ride on!"))
             while (self.opponent_select < 0) or (self.opponent_select > len(self.opponent_team) - 1):
-               self.opponent_select = int(input("Error! Select an opponent!")) 
-            print(f"{self.user_team[self.user_select].name} pulled up on {self.opponent_team[self.opponent_select].name} and did {self.user_team[self.user_select].attack_points} damage!")
+                self.opponent_select = int(input("Error! Select an opponent"))
+            print(f"{self.user_team[self.user_select].name} pulls up on {self.opponent_team[self.opponent_select].name} and did {self.user_team[self.user_select].attack_points} damage!")
             self.user_team[self.user_select].robot_attack(self.opponent_team[self.opponent_select])
             if self.user_select >= (len(self.user_team) - 1):
                 self.user_select = 0
             else:
                 self.user_select += 1
-            
         else:
             self.select_target = random.randint(0, len(self.user_team) - 1)
             print(f"{self.opponent_team[self.opponent_select].name} pulled up on {self.user_team[self.user_select].name} and did {self.opponent_team[self.opponent_select].attack_points} damage!")
